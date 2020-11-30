@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:element name="Config" type="ConfigType"/>
+
+    <xsd:complexType name="ConfigType">
+    	<xsd:sequence>
+    		<xsd:element name="CA" type="CAType" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="CAType">
+    	<xsd:sequence>
+    		<xsd:element name="Name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="ParentCa" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="Type" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="StandaloneRootCA"/>
+              <xsd:enumeration value="StandaloneSubordinateCA"/>
+              <xsd:enumeration value="EnterpriseSubordinateCA"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="DistinguishedNameSuffix" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="DatabaseDirectory" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="LogDirectory" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="DsConfigDn" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="AllowAdministratorInteraction" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="Certificate" type="CertificateType" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="CertificateProfile" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value=""/>
+              <xsd:pattern value="[Cc][Oo][Mm][Mm][Oo][Nn][Pp][Kk][Ii]"/>
+              <xsd:pattern value="[De][Ee][Ff][Aa][Uu][Ll][Tt]"/>
+              <xsd:pattern value="[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]"/>
+              <xsd:pattern value="[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]-[Ll][Ee][Gg][Aa][Cc][Yy]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="RemoveMSFTExtensions" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="IncludeNonDefinedRDN" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+<xsd:element name="RemoveFromNTAuthCertificates" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="Crypto" type="CryptoType" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="Policy" type="PolicyType" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="Settings" type="SettingsType" minOccurs="1" maxOccurs="1"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="CertificateType">
+    	<xsd:sequence>
+        <xsd:element name="ValidityPeriod" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value=""/>
+              <xsd:pattern value="[Yy][Ee][Aa][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Oo][Nn][Tt][Hh][Ss]"/>
+              <xsd:pattern value="[Ww][Ee][Ee][Kk][Ss]"/>
+              <xsd:pattern value="[Dd][Aa][Yy][Ss]"/>
+              <xsd:pattern value="[Hh][Oo][Uu][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Ii][Nn][Uu][Tt][Ee][Ss]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="ValidityPeriodUnits" minOccurs="1" maxOccurs="1">   
+          <xsd:simpleType>
+            <xsd:union>
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value=""/>
+                </xsd:restriction>
+              </xsd:simpleType>
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:integer"/>
+              </xsd:simpleType>
+            </xsd:union>
+          </xsd:simpleType> 
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="CryptoType">
+    	<xsd:sequence>
+        <xsd:element name="KspName" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="Microsoft Software Key Storage Provider"/>
+              <xsd:enumeration value="Utimaco CryptoServer Key Storage Provider"/>
+              <xsd:enumeration value="SafeNet Key Storage Provider"/>
+              <xsd:enumeration value="nCipher Security World Key Storage Provider"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="EncryptionCspName" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="Microsoft Software Key Storage Provider"/>
+              <xsd:enumeration value="Utimaco CryptoServer Key Storage Provider"/>
+              <xsd:enumeration value="SafeNet Key Storage Provider"/>
+              <xsd:enumeration value="nCipher Security World Key Storage Provider"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="KeyAlgorithm" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="RSA"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="KeyLength" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+              <xsd:enumeration value="8192"/>
+              <xsd:enumeration value="4096"/>
+              <xsd:enumeration value="2048"/>
+              <xsd:enumeration value="1024"/>
+              <xsd:enumeration value="512"/>
+              <xsd:enumeration value="384"/>
+              <xsd:enumeration value="256"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="Pkcs1Version" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="1.5"/>
+              <xsd:enumeration value="2.1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="SignatureHashAlgorithm" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Mm][Dd]5"/>
+              <xsd:pattern value="[Ss][Hh][Aa]1"/>
+              <xsd:pattern value="[Ss][Hh][Aa]256"/>
+              <xsd:pattern value="[Ss][Hh][Aa]384"/>
+              <xsd:pattern value="[Ss][Hh][Aa]512"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="PolicyType">
+    	<xsd:sequence>
+        <xsd:element name="PathLength" minOccurs="0" maxOccurs="1">
+         <xsd:simpleType>
+            <xsd:union>
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value=""/>
+                </xsd:restriction>
+              </xsd:simpleType>
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:integer">
+                  <xsd:minInclusive value="0"/>
+                  <xsd:maxInclusive value="10"/>
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:union> 
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="IssuancePolicy" type="IssuancePolicyType" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="EnhancedKeyUsage" type="EnhancedKeyUsageType" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="EKUmArkCritical" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="IssuancePolicyType">
+    	<xsd:sequence>
+        <xsd:element name="Oid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="Notice" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="Url" type="xsd:anyURI" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="Description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="EnhancedKeyUsageType">
+    	<xsd:sequence>
+        <xsd:element name="Oid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="Description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SettingsType">
+    	<xsd:sequence>
+        <xsd:element name="AuditFilter" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+              <xsd:minInclusive value="0"/>
+              <xsd:maxInclusive value="127"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="ValidityPeriodUnits" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="ValidityPeriod" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Yy][Ee][Aa][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Oo][Nn][Tt][Hh][Ss]"/>
+              <xsd:pattern value="[Ww][Ee][Ee][Kk][Ss]"/>
+              <xsd:pattern value="[Dd][Aa][Yy][Ss]"/>
+              <xsd:pattern value="[Hh][Oo][Uu][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Ii][Nn][Uu][Tt][Ee][Ss]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="AllowRenewalOnBehalfOf" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="Extensions" type="ExtensionsType" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="CRL" type="CRLType" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ExtensionsType">
+    	<xsd:sequence>
+        <xsd:element name="CDP" type="CDPType"  minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element name="AIA" type="AIAType"  minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="CRLType">
+    	<xsd:sequence>
+        <xsd:element name="PeriodUnits" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="Period" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Yy][Ee][Aa][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Oo][Nn][Tt][Hh][Ss]"/>
+              <xsd:pattern value="[Ww][Ee][Ee][Kk][Ss]"/>
+              <xsd:pattern value="[Dd][Aa][Yy][Ss]"/>
+              <xsd:pattern value="[Hh][Oo][Uu][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Ii][Nn][Uu][Tt][Ee][Ss]"/>
+            </xsd:restriction>
+          </xsd:simpleType>        
+        </xsd:element>
+        <xsd:element name="OverlapUnits" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="OverlapPeriod" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Yy][Ee][Aa][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Oo][Nn][Tt][Hh][Ss]"/>
+              <xsd:pattern value="[Ww][Ee][Ee][Kk][Ss]"/>
+              <xsd:pattern value="[Dd][Aa][Yy][Ss]"/>
+              <xsd:pattern value="[Hh][Oo][Uu][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Ii][Nn][Uu][Tt][Ee][Ss]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>        
+        <xsd:element name="DeltaPeriodUnits" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="DeltaPeriod" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Yy][Ee][Aa][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Oo][Nn][Tt][Hh][Ss]"/>
+              <xsd:pattern value="[Ww][Ee][Ee][Kk][Ss]"/>
+              <xsd:pattern value="[Dd][Aa][Yy][Ss]"/>
+              <xsd:pattern value="[Hh][Oo][Uu][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Ii][Nn][Uu][Tt][Ee][Ss]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>        
+        <xsd:element name="DeltaOverlapUnits" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="DeltaOverlapPeriod" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Yy][Ee][Aa][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Oo][Nn][Tt][Hh][Ss]"/>
+              <xsd:pattern value="[Ww][Ee][Ee][Kk][Ss]"/>
+              <xsd:pattern value="[Dd][Aa][Yy][Ss]"/>
+              <xsd:pattern value="[Hh][Oo][Uu][Rr][Ss]"/>
+              <xsd:pattern value="[Mm][Ii][Nn][Uu][Tt][Ee][Ss]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="CDPType">
+    	<xsd:sequence>
+        <xsd:element name="Protocol" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[hH][tT][tT][pP]"/>
+              <xsd:pattern value="[fF][tT][pP]"/>
+              <xsd:pattern value="[lL][dD][aA][pP]"/>
+              <xsd:pattern value="[fF][iI][lL][eE]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="URL" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="AddToCrlCdp" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="AddToCertificateCDP" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="AddToFreshestCrl" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="PublishToServer" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="PublishDeltaToServer" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="AddToCrlIdp" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="AIAType">
+    	<xsd:sequence>
+        <xsd:element name="Protocol" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[hH][tT][tT][pP]"/>
+              <xsd:pattern value="[fF][tT][pP]"/>
+              <xsd:pattern value="[lL][dD][aA][pP]"/>
+              <xsd:pattern value="[oO][cC][sS][pP]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="URL" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="AddToCertificateAia" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="AddToCertificateOcsp" minOccurs="0" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

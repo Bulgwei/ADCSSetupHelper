@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:element name="Config" type="ConfigType"/>
+
+    <xsd:complexType name="ConfigType">
+    	<xsd:sequence>
+    		<xsd:element name="Report" type="ReportType" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ReportType">
+    	<xsd:sequence>
+        <xsd:element name="Engagement" minOccurs="1" maxOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="OAADCS"/>
+              <xsd:enumeration value="PAS"/>
+              <xsd:enumeration value="DSE"/>
+              <xsd:enumeration value="POP-ADCSD"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+    		<xsd:element name="GenericTerms" type="GenericTermsType" minOccurs="1" maxOccurs="1"></xsd:element>
+        <xsd:element name="Infrastructure" type="InfrastructureType" minOccurs="1" maxOccurs="1"></xsd:element>
+        <xsd:element name="PageSetup" type="PageSetupType" minOccurs="1" maxOccurs="1"></xsd:element>
+        <xsd:element name="ReportOutput" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+        <xsd:element name="CustomerLogo" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GenericTermsType">
+      <xsd:choice minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="Term" type="TermType"/>
+      </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="TermType">
+      <xsd:sequence>
+        <xsd:element name="Placeholder" type="xsd:string"/>
+        <xsd:element name="ReplaceWith" type="xsd:string"/>
+        <xsd:element name="SearchInHeader">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:pattern value="[Tt][Rr][Uu][Ee]"/>
+              <xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="InfrastructureType">
+      <xsd:sequence>
+        <xsd:element name="ConfigFile" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="PageSetupType">
+      <xsd:sequence minOccurs="1" maxOccurs="1">
+        <xsd:element name="PaperFormat" maxOccurs="1" minOccurs="1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="10x14"/>
+              <xsd:enumeration value="11x17"/>
+              <xsd:enumeration value="Letter"/>
+              <xsd:enumeration value="LetterSmall"/>
+              <xsd:enumeration value="Legal"/>
+              <xsd:enumeration value="Executive"/>
+              <xsd:enumeration value="A3"/>
+              <xsd:enumeration value="A4"/>
+              <xsd:enumeration value="A4Small"/>
+              <xsd:enumeration value="A5"/>
+              <xsd:enumeration value="B4"/>
+              <xsd:enumeration value="B5"/>
+              <xsd:enumeration value="CSheet"/>
+              <xsd:enumeration value="DSheet"/>
+              <xsd:enumeration value="ESheet"/>
+              <xsd:enumeration value="FanfoldLegalGerman"/>
+              <xsd:enumeration value="FanfoldStdGerman"/>
+              <xsd:enumeration value="FanfoldUS"/>
+              <xsd:enumeration value="Folio"/>
+              <xsd:enumeration value="Ledger"/>
+              <xsd:enumeration value="Note"/>
+              <xsd:enumeration value="Quarto"/>
+              <xsd:enumeration value="Statement"/>
+              <xsd:enumeration value="Tabloid"/>
+              <xsd:enumeration value="Envelope9"/>
+              <xsd:enumeration value="Envelope10"/>
+              <xsd:enumeration value="Envelope11"/>
+              <xsd:enumeration value="Envelope12"/>
+              <xsd:enumeration value="Envelope14"/>
+              <xsd:enumeration value="EnvelopeB4"/>
+              <xsd:enumeration value="EnvelopeB5"/>
+              <xsd:enumeration value="EnvelopeB6"/>
+              <xsd:enumeration value="EnvelopeC3"/>
+              <xsd:enumeration value="EnvelopeC4"/>
+              <xsd:enumeration value="EnvelopeC5"/>
+              <xsd:enumeration value="EnvelopeC6"/>
+              <xsd:enumeration value="EnvelopeC65"/>
+              <xsd:enumeration value="EnvelopeDL"/>
+              <xsd:enumeration value="EnvelopeItaly"/>
+              <xsd:enumeration value="EnvelopeMonarch"/>
+              <xsd:enumeration value="EnvelopePersonal"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="CustomStylesTemplate" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

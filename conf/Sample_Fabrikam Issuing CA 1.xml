@@ -1,0 +1,556 @@
+<?xml version="1.0"?>
+<!--
+	Note:
+		You should use an Editor with Syntax Highlighting for XML to edit this file
+		Capable Applications include:
+		- Notepad++
+		- Visual Studio Code
+		You may have serious trouble properly formatting the file wihout Syntax highlighting.
+-->
+<!--
+	Description:
+		Each Configuration File starts with a Config Node.
+		This enables us to merge multiple Files into one single XML Configuration when loading
+		The Config Node also contains Information on the Schema File that is used to verify the Configuration
+		Each CA Configuration must contain at least one CA Node.
+		The Node contains all Configuration Settings for a single CA.
+		Though possible, I would personally not include more than one CA Node per file.
+-->
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Config-CA.xsd">
+	<CA>
+		<!--
+			Description:
+				The Name Node specifies the Common Name of the CA
+			Example:
+				<Name>Fabrikam Root CA</Name>
+				resolves to CN=Fabrikam Root CA in the CA Certificate
+		-->
+		<Name>Fabrikam Issuing CA 1</Name>
+		<!--
+			Description:
+				Only for the documental part - not used for the CA setup part!
+				The ParentCa Node specifies the Common Name of the CA that will sign
+				the Certificate Signing Request for this CA.
+				Therefore, this is only applicable if this CA is a Subordinate CA
+			Default:
+				Leave Empty or remove the entire Node if not needed
+		-->
+		<ParentCa>Fabrikam Root CA</ParentCa>
+		<!--
+			Description:
+				The Type Node specifies the CA Type
+				Currently, only the following is supported:
+				- StandaloneRootCA
+				- StndaloneSubordinateCA
+				- EnterpriseSubordinateCA
+		-->
+		<Type>EnterpriseSubordinateCA</Type>
+		<!--
+			Description:
+				The DatabaseDirectory Node specifies the physical Path where to store 
+				the CA Database. If not path is entered, the OS/Service default is used 
+				here (C:\windows\system32\certlog)
+			Default:
+				Leave Empty if not needed
+		-->
+		<DatabaseDirectory></DatabaseDirectory>
+		<!--
+			Description:
+				The LogDirectory Node specifies the physical Path where the CA Database 
+				Transaction Logs are stored. If not path is entered, the OS/Service default is used 
+				here (C:\windows\system32\certlog)
+			Default:
+				Leave Empty if not needed
+		-->
+		<LogDirectory></LogDirectory>
+		<!--
+			Description:
+				Ensure this is set to True if you use a HSM with Operator Card Set Protection
+				or similar Mechanisms (like strong Private Key Protection) that requires interaction
+				with the ADCS Service during the Start of the CA Service
+			Default:
+				The Setting must be either True or False
+		-->
+		<AllowAdministratorInteraction>False</AllowAdministratorInteraction>
+		<!--
+			Description:
+				The CertificateProfile Node describes a specific Certificate Profile to be used
+				for the CA Certificate. 
+				# possible values are:
+					# - empty equals Default: markes KeyUsage Extension as "Critical"
+					# Default:                markes KeyUsage Extension as "Critical"
+					# Microsoft:              markes KeyUsage Extension as "Critical"
+					# Microsoft-Legacy:       leaves KeyUsage Extension uncritical
+					# CommonPKI:              removes "Digital Signature" and markes KeyUsage Extension as "Critical"
+				"CommonPki" will ensure that our CA Certificate will be strictly compliant to the Certificate 
+				Profile of the Common PKI Standard which is mainly used in Germany and recommended by the Authorities
+			Default:
+				Leave Empty
+		-->
+		<CertificateProfile></CertificateProfile>
+		<!--
+			Description:
+				The RemoveMSFTExtensions Node specifies whether to remove the Microsoft Specific
+				Extensions in the CA Certificate (CA Version, Previous CA Certificate Hash, 
+				Certificate Template Information). In most Cases, this is not needed. There were times
+				when Legacy Applications had trouble interpreting these Extensions correctly.
+			Default:
+				Set to False or remove the Node if not needed	
+		-->
+		<RemoveMSFTExtensions>False</RemoveMSFTExtensions>
+		<!--
+			Description:
+				The IncludeNonDefinedRDN Node specifies whether to include non-defined RDN in subject
+				e.g. Organisation Identifier in Issued Certificates (OID 2.5.4.97) - to be complaint 
+				to a specific standard (e.g. eIDas).
+			Default:
+				Set to False or remove the Node if not needed	
+		-->
+		<IncludeNonDefinedRDN>False</IncludeNonDefinedRDN>
+		<!--
+			Description:
+				The RemoveFromNTAuthCertificates Node specifies whether the CA Certificate shall be removed
+				from the Active Directory NTAuthCertificates Store after Deployment, or not.
+				A Common reason to remove the Certificate is that it cannot be used for Certificate-based Logon
+				(like Smart Card Logon) anymore, which may prevent the CA from taking over Active Directory.
+			Note:
+				Removing the CA Certificate from NTAuthCertificates will disable the following Services
+				and Features:
+					- Enroll on behalf of
+					- Any Certificate-based Logon to AD
+						as Microsoft Network Policy Server (VPN, 802.1X)
+						and any AD-based Request Agent and Recovery Agent certificates
+					- Smart Card Logon
+					- Windows Hello for Business
+			Default:
+				Set to False or remove the Node if not needed	
+		-->
+		<RemoveFromNTAuthCertificates>False</RemoveFromNTAuthCertificates>
+		<Crypto>
+			<!--
+				Description:
+					The KspName Node specifies the Key Storage Provider to be used for the CA Certificate
+				Examples:
+					- Microsoft Software Key Storage Provider
+					- Utimaco CryptoServer Key Storage Provider
+					- SafeNet Key Storage Provider
+					- nCipher Security World Key Storage Provider
+				Note:
+					Do NOT append the "RSA#" Prefix
+				Default:
+					Microsoft Software Key Storage Provider
+			-->
+			<KspName>Microsoft Software Key Storage Provider</KspName>
+			<!--
+				Description:
+					The EncryptionCspName Node specifies the Key Storage Provider to be used for the CA 
+					Exchange Certificate. If using a Hardware Security Module (HSM), the CA will by default
+					use the same Key Storage Provider for the private Keys of CA Exchange Certificate.
+					It might be a good choice to change this to a the Microsoft Software KSP to avoid HSM 
+					issues like the partition filling up. The CA Exchange Certificate may be recreated 
+					every two weeks aith a new Key Pair. Also, you might get avoidable OCC prompts when running
+					the ADCS Assessment Data Collection Tool.
+				Default:
+					Leave Empty or remove the Node if not needed
+			-->
+			<EncryptionCspName>Microsoft Software Key Storage Provider</EncryptionCspName>
+			<!--
+				Description:
+					The KeyAlgorithm Node specifies Cryptographic Algorithm that is used to create the 
+					Key Pair for the CA Certificate. May be RSA or ECC, but please make sure that the 
+					Key Storage Provider specified under KspName supports it.
+				Default:
+					RSA
+			-->
+			<KeyAlgorithm>RSA</KeyAlgorithm>
+			<!--
+				Description:
+					The KeyLength Node specifies Key Length used for the Key Pair for the CA Certificate.
+					For RSA, this may be 1024, 2048, 4096, 8192
+					For ECC, this may be 256, 384, 512
+				Default:
+					4096
+			-->
+			<KeyLength>4096</KeyLength>
+			<!--
+				Description:
+					The Pkcs1Version Node specifies the Signature Algorithm (PKCS#1) to use for issued Certificates
+					May be 1.5 or 2.1
+					From a security perspective, PKCS#1 2.1 is recommended.
+					However, many vendors (like Cisco) have not implemented PKCS#1 2.1, thus
+					their devices cannot understand certificates from a CA that signs with 2.1
+					For compatibility reasons, we will often have to fall back to 1.5 in 
+					most cases there are working attacks on 1.5, which are currently mitigated 
+					within the actual products that use Certificates
+				Default:
+					1.5
+			-->
+			<Pkcs1Version>1.5</Pkcs1Version>
+			<!--
+				Description:
+					The SignatureHashAlgorithm Node specifies the Signatuee Hash Algorithm to use for issued Certificates
+					May be MD5, SHA1, SHA256, SHA384, SHA512
+					See https://msdn.microsoft.com/de-de/library/system.security.cryptography.hashalgorithmname(v=vs.110).aspx for more information.
+				Default:
+					SHA256
+			-->
+			<SignatureHashAlgorithm>SHA256</SignatureHashAlgorithm>
+		</Crypto>
+		<!--
+			Description:
+				The Policy Node specifies Policy Settings that apply to the CA Certificate of our CA
+				These are included in the Certificate Signing Request (CSR) of the CA Certificate
+				They include
+					- Path Length Constraints
+					- Issuance Policies (like a Certificate Practice Statement)
+					- Application Policies (aka Enhanced Key Usage Constraints)
+			Note:
+				Naming Constraints are not implemented yet
+		-->
+		<Policy>
+			<!--
+				Description:
+					The PathLength Node specifies the Path Length Constraint that applies to the CA.
+					A Path Length Constraint describes how many CAs may follow below this one further down in
+					the Hierarchy. For a 2-Tier Deployment, the Root CA usually gets "1" and the Subordinate CA get "0"
+				Note:
+					- PathLength on a Root CA Certificate will result in the Value being written into the 
+					  CAPathLength Registry Key of the CA (not included in the CA certificate but honored by the Policy Module)
+					- PathLength on a Subordinate CA Certificate will result in	the Value being written into the CSR
+				Default:
+					Leave Empty or remove the Node if not needed
+			-->
+			<PathLength>1</PathLength>
+			<!--
+				Description:
+					The IssuancePolicy Node describes Certificate Policies that apply to the CA Certificate.
+				Note:
+					- There may be multiple IssuancePolicy Nodes
+					- No Issuance Policies on a Root CA means the CA will be implicitly valid for "All Issuance Policies"
+					  Therefore, the "All Issuance Policies" Policy OID may be omitted on a Root CA 
+					- No Issuance Policies on a Subordinate CA means the CA will be valid for no Polcies at all
+					- It is discouraged to use the "All Issuance Policies" Policy on a Subordinate CA as this violates
+					  RFC5280. If possible specify explicit Issuance Policies on Subordnate CAs, or none.
+				Default:
+					- No Issuance Policy Nodes defined
+			-->
+			<IssuancePolicy>
+				<Oid>2.5.29.32.0</Oid>
+				<Description>All Issuance Policies</Description>
+			</IssuancePolicy>
+			<!--
+			<IssuancePolicy>
+				<Oid>1.3.6.1.4.1.99999.300.2.1.4.3.1</Oid>
+				<Notice>CPS is to be found at: http://pki.fabrikam.com/CPS/index.html</Notice>
+				<Url>http://pki.fabrikam.com/CPS/index.html</Url>
+				<Description>Fabrikam CP and CPS Document</Description>
+			</IssuancePolicy>
+			<IssuancePolicy>
+				<Oid>1.3.6.1.4.1.311.21.32</Oid>
+				<Description>TPM Key Attestattion: User Credentials (Low Assurance)</Description>
+			</IssuancePolicy>
+			<IssuancePolicy>
+				<Oid>1.3.6.1.4.1.311.21.31</Oid>
+				<Description>TPM Key Attestattion: Endorsement Certificate (Medium Assurance)</Description>
+			</IssuancePolicy>
+			<IssuancePolicy>
+				<Oid>1.3.6.1.4.1.311.21.30</Oid>
+				<Description>TPM Key Attestattion: Endorsement Key (High Assurance)</Description>
+			</IssuancePolicy>
+			-->
+			<!--
+				Description:
+					The EnhancedKeyUsage Node describes the Application Polcies that apply to the CA Certificate
+					By default the CA will be valid to issue Certificates for all Enhanced Key Usages.
+					By specifying Enhanced Key Usages, the CA will be limited to those.
+				Note:
+					- There may be multiple EnhancedKeyUsage Nodes
+					- It is recommended to always include the Private Key Archival Enhanced Key Usage, as otherwise
+					  the CA will not be able to issue CA Exchange Certificates, which may break several Applications
+					  (like pkiview.msc)
+				Default:
+					No EnhancedKeyUsage Nodes defined
+			-->
+			<!--
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.21.5</Oid>
+				<Description>CA Encryption Certificate</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.20.2.1</Oid>
+				<Description>Certificate Request Agent</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.2</Oid>
+				<Description>Client Authentication</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.3</Oid>
+				<Description>Code Signing</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.12</Oid>
+				<Description>Document Signing</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.4</Oid>
+				<Description>Encrypting file system</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.4.1</Oid>
+				<Description>File Recovery</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.5</Oid>
+				<Description>IP Security End System</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.8.2.2</Oid>
+				<Description>IP Security IKE Intermediate</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.6</Oid>
+				<Description>IP Security Tunnel Endpoint</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.7</Oid>
+				<Description>IP Security User</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.11</Oid>
+				<Description>Key Recovery</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.2.3.5</Oid>
+				<Description>KDC Authentication</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.1</Oid>
+				<Description>Microsoft Trust List Signing</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.10</Oid>
+				<Description>Qualified Subordination</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.10.3.9</Oid>
+				<Description>Root List Signer</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.4</Oid>
+				<Description>Secure E-mail</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.1</Oid>
+				<Description>Server Authentication</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.20.2.2</Oid>
+				<Description>Smart Card Logon</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.8</Oid>
+				<Description>Time Stamping</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.5.5.7.3.9</Oid>
+				<Description>OCSP Signing</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.54.1.2</Oid>
+				<Description>Remote Desktop Authentication</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>1.3.6.1.4.1.311.21.5</Oid>
+				<Description>Private Key Archival</Description>
+			</EnhancedKeyUsage>
+			<EnhancedKeyUsage>
+				<Oid>2.16.840.1.113741.1.2.3</Oid>
+				<Description>AMT Provisioning</Description>
+			</EnhancedKeyUsage>
+			-->
+		    <!--
+			    Description:
+				    The EKUmArkCritical node is used to mark the EKU extension in the CA certificate as
+					    - critical or
+					    - non-critical
+					    Default:
+                        	empty or FALSE -> non-critical
+					We recommend to mark this extension as critical if used to ensure the constraints are
+					getting enforced
+		    -->
+            <EKUmArkCritical>false</EKUmArkCritical>
+		</Policy>
+		<!--
+			Description:
+				The Settings Node describes several Settings that are applied to the CA
+					- Auditing
+					- Validity Period of issued Certificates
+					- Specify if Renewal on Behalf of is allowed
+					- Extensions that are written into issued Certificates
+					- The CRL Configuration
+		-->
+		<Settings>
+			<!--	
+				Description:
+					The AuditFilter Node describes the Audit Settings that are aplied to the CA	
+					possible values:
+						- 0	Disable Auditing
+						- 1	Start and stop Active Directory Certificate Services
+						- 2	Back up and restore the CA Database
+						- 4	Issue and manage certificate requests
+						- 8	Revoke certificates and publish CRLs
+						- 16 Change CA security settings
+						- 32 Store and retrieve archived keys
+						- 64 Change  CA configuration
+						(or a combination of these - The Value must be between 0 for nothing and 127 for everything)
+					Default:
+						127
+			-->
+			<AuditFilter>127</AuditFilter>
+			<!--
+				Description:
+					The ValidityPeriodUnits and ValidityPeriod Nodes specify the Validity Period of issued Certificates
+					Should be half of the defined CA certificate validitiy.
+				Default:
+					2 Years for subordinate CAs in a 2 tier PKI hierachy
+						(means 2 years for issued end entity certificates)
+			-->
+			<ValidityPeriodUnits>2</ValidityPeriodUnits>
+			<ValidityPeriod>Years</ValidityPeriod>
+			<!--
+				Description:
+					Allow Renewal on Behalf of, which is required for Key-based Renewal via CEP/CES
+					no Effect when Type is StandaloneRootCA
+				Default:
+					Set to False or remove the Node if not needed	
+			-->
+			<AllowRenewalOnBehalfOf>False</AllowRenewalOnBehalfOf>
+			<!--
+				Description:
+					The Extensions Node contains the CDP and AIA Extensions for issued Certificates
+				Note:
+					Extensions are processed (e.g. written into issued Certificates) 
+					in the exact order as presented here
+			-->
+			<Extensions>
+				<!--
+					Description:
+						The CDP Node describes a CRL Distribution Point (CDP) that is written 
+						into issued Certificates.
+						Protocol may be http, ldap or file (both local or UNC)
+						NOTE: URI must contain the http, ldap, ftp, local or UNC Path.
+						IMPORTANT: https is NOT supported for ADCS CDP configuration! 
+							FTP can only be used in stated (AddToCertificateCDP) configuration
+							for non-Microsoft clients.
+						if ldap is configured, one of the following must be set to "True":
+						Flags:
+							AddToCrlCdp means "Include in all CRLs (for publication in AD)"
+							AddToCertificateCDP means "Include in the CDP extension of issued certificates"
+							AddToFreshestCrl means Include in CRLs (to find Delta CRLs)
+							PublishToServer means "Publish CRLs to this location"
+							PublishDeltaToServer means "Publish Delta CRLs to this location"
+							AddToCrlIdp means "Include in the IDP Extension of issued CRLs"
+				-->
+				<CDP>
+					<Protocol>http</Protocol>
+					<URL>http://pki.fabrikam.com/CertData/%3%8%9.crl</URL>
+					<AddToCrlCdp>True</AddToCrlCdp>
+					<AddToCertificateCDP>True</AddToCertificateCDP>
+					<AddToFreshestCrl>True</AddToFreshestCrl>
+					<PublishToServer>False</PublishToServer>
+					<PublishDeltaToServer>False</PublishDeltaToServer>
+					<AddToCrlIdp>False</AddToCrlIdp>
+				</CDP>
+				<CDP>
+					<Protocol>ldap</Protocol>
+					<URL>ldap:///CN=%7%8,CN=%3,CN=CDP,CN=Public Key Services,CN=Services,%6%10</URL>
+					<AddToCrlCdp>True</AddToCrlCdp>
+					<AddToCertificateCDP>True</AddToCertificateCDP>
+					<AddToFreshestCrl>True</AddToFreshestCrl>
+					<PublishToServer>False</PublishToServer>
+					<PublishDeltaToServer>False</PublishDeltaToServer>
+					<AddToCrlIdp>False</AddToCrlIdp>
+				</CDP>
+				<CDP>
+					<Protocol>file</Protocol>
+					<URL>\\adcsweb01.fabrikam.com\CertData$\%3%8%9.crl</URL>
+					<AddToCrlCdp>False</AddToCrlCdp>
+					<AddToCertificateCDP>False</AddToCertificateCDP>
+					<AddToFreshestCrl>False</AddToFreshestCrl>
+					<PublishToServer>True</PublishToServer>
+					<PublishDeltaToServer>True</PublishDeltaToServer>
+					<AddToCrlIdp>False</AddToCrlIdp>
+				</CDP>
+				<!--
+					Description:
+						The AIA Node describes a Authority Information Access (AIA) that is 
+						written into issued Certificates.
+						Protocol may be http, ftp, ldap or ocsp
+						NOTE: URI must contain the http, ftp, https or ldap Path and 
+						AddToCertificateAia needs to be set to "True" to add
+						the URL to the CA extension configuration
+				-->
+				<AIA>
+					<Protocol>http</Protocol>
+					<URL>http://pki.fabrikam.com/CertData/%3%4.crt</URL>
+					<AddToCertificateAia>True</AddToCertificateAia>
+				</AIA>
+				<AIA>
+					<Protocol>ldap</Protocol>
+					<URL>ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11</URL>
+					<AddToCertificateAia>False</AddToCertificateAia>
+				</AIA>
+				<!--
+					For OCSP, you just need to enter the OCSP URI. If this protocol node is present,
+					all other settings will be made automatically.
+					NOTE: for OCSP URI, only http should be used.
+				-->
+				<AIA>
+					<Protocol>ocsp</Protocol>
+					<URL>http://ocsp.fabrikam.com/ocsp</URL>
+				</AIA>
+			</Extensions>
+			<CRL>
+				<!--
+					Description:
+						The PeriodUnits and Period Nodes specify
+						the CRL Validity Period
+					Default:
+						3 Months for a Root CA
+						4 Days for an Issuing CA
+				-->
+				<PeriodUnits>4</PeriodUnits>
+				<Period>Days</Period>
+				<!--
+					Description:
+						The OverlapUnits and OverlapPeriod Nodes specify
+						the CRL Overlapping Parameters
+					Default:
+						3 Months for a Root CA
+						4 Days for an Issuing CA
+				-->
+				<OverlapUnits>4</OverlapUnits>
+				<OverlapPeriod>Days</OverlapPeriod>
+				<!--
+					Description:
+						The DeltaPeriodUnits and DeltaPeriod Nodes specify
+						the Delta CRL Validity Period
+					Default:
+						Set the "Units" to 0 to disable Delta CRLs
+				-->
+				<DeltaPeriodUnits>0</DeltaPeriodUnits>
+				<DeltaPeriod>Days</DeltaPeriod>
+				<!--
+					Description:
+						The DeltaOverlapUnits and DeltaOverlap Period Nodes specify
+						the Delta CRL Overlapping Parameters
+					Default:
+						Set the "Units" to 0 to disable Delta CRLs
+				-->
+				<DeltaOverlapUnits>0</DeltaOverlapUnits>
+				<DeltaOverlapPeriod>Days</DeltaOverlapPeriod>
+			</CRL>
+		</Settings>
+	</CA>
+</Config>

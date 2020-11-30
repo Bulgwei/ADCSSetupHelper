@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Config-GenericTerms.xsd">
+    <GenericTerms>
+        <Term>
+            <Placeholder>CheckBox-True</Placeholder>
+            <ReplaceWith>Checked</ReplaceWith>
+            <SearchInHeader>False</SearchInHeader>
+        </Term>
+        <Term>
+            <Placeholder>CheckBox-False</Placeholder>
+            <ReplaceWith>Unchecked</ReplaceWith>
+            <SearchInHeader>False</SearchInHeader>
+        </Term>
+        <Term>
+            <Placeholder>YesNo-True</Placeholder>
+            <ReplaceWith>Yes</ReplaceWith>
+            <SearchInHeader>False</SearchInHeader>
+        </Term>
+        <Term>
+            <Placeholder>YesNo-False</Placeholder>
+            <ReplaceWith>No</ReplaceWith>
+            <SearchInHeader>False</SearchInHeader>
+        </Term>
+    </GenericTerms>
+</Config>

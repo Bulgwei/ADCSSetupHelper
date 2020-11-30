@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--
+	Note:
+		You should use an Editor with Syntax Highlighting for XML to edit this file
+		Capable Applications include:
+		- Notepad++
+		- Visual Studio Code
+		You may have serious trouble properly formatting the file wihout Syntax highlighting.
+-->
+<!--
+	Description:
+		Each Configuration File starts with a Config Node.
+		This enables us to merge multiple Files into one single XML Configuration when loading
+		The Config Node also contains Information on the Schema File that is used to verify the Configuration
+		The Report Node describes the initial Configuration for the Engagement Documentation.
+		It may reference to additional Configuration files later on.
+		There must be only one Report Node per File.
+-->
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Config-Customer.xsd">
+	<Report>
+		<!--
+			Description:
+				The Engagement Node specifies the Documentation Content.
+				May be OAADCS, PAS, DSE, POP-ADCSD
+			Default:
+				OAADCS
+		-->
+		<Engagement>OAADCS</Engagement>
+		<!--
+			Description:
+				The GenericTerms Node describes Strings that will be replaced when building the Documentation.
+				- PlaceHolder should not be modified
+				- ReplaceWith specifies the String to ne replaced
+				- SeachInHeader should not be modified
+			Note:
+				Do NOT remove any of the Term Nodes.
+
+				When the a String contains one or more Ampersands ("&"), you must replace these with &#038; 
+				as the Ampersand will be treated as an escape character in XML.
+
+				Do the same for special characters like Umlauts
+				& -> &#038;
+				ß -> &#225;
+				ä -> &#132;
+				ö -> &#148;
+				ü -> &#129;
+				Ä -> &#142;
+				Ö -> &#153;
+				Ü -> &#154;
+		-->
+		<GenericTerms>
+			<Term>
+				<!--
+					Description:
+						Adjust the ReplaceWith Node to your Customer
+				-->
+				<Placeholder>CustomerName</Placeholder>
+				<ReplaceWith>Fabrikam Corporation</ReplaceWith>
+				<SearchInHeader>True</SearchInHeader>
+			</Term>
+			<Term>
+				<Placeholder>CustomerShortName</Placeholder>
+				<ReplaceWith>Fabrikam</ReplaceWith>
+				<SearchInHeader>False</SearchInHeader>
+			</Term>
+			<Term>
+				<Placeholder>DocOwner</Placeholder>
+				<ReplaceWith>Uwe Gradenegger</ReplaceWith>
+				<SearchInHeader>False</SearchInHeader>
+			</Term>
+			<Term>
+				<Placeholder>DocOwnerMail</Placeholder>
+				<ReplaceWith>uwstoppe@microsoft.com</ReplaceWith>
+				<SearchInHeader>False</SearchInHeader>
+			</Term>
+			<Term>
+				<Placeholder>SupplierName</Placeholder>
+				<ReplaceWith>Microsoft Deutschland GmbH</ReplaceWith>
+				<SearchInHeader>False</SearchInHeader>
+			</Term>
+			<Term>
+				<Placeholder>SupplierShortName</Placeholder>
+				<ReplaceWith>Microsoft</ReplaceWith>
+				<SearchInHeader>False</SearchInHeader>
+			</Term>
+			<Term>
+				<Placeholder>SupplierDivision</Placeholder>
+				<ReplaceWith>Premier Field Engineering</ReplaceWith>
+				<SearchInHeader>False</SearchInHeader>
+			</Term>
+		</GenericTerms>
+		<!--
+			Description:
+				The Infrastructure Node describes the Infrastructure Components to be documented.
+		-->
+		<Infrastructure>
+			<!--
+				Description:
+					The ConfigFile Node specifies the Path to the Additional Configuration Files
+					for Infrastructure Components like CAs, NDES and so on.
+					The Files must reside in the same Folder as this Configuration File.
+				Note:
+					- There must be at least one ConfigFile defined
+					- There may be multiple ConfigFiles defined
+			-->
+			<ConfigFile>Sample_Fabrikam Root CA.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam Issuing CA 1.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-IIS.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-NDES.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-OCSP.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CEP.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CES.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CertTemplate-DomainController.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CertTemplate-NDESCEPEncryption.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CertTemplate-NDESEnrollmentAgent.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CertTemplate-RemoteDesktop.xml</ConfigFile>
+			<ConfigFile>Sample_Fabrikam-CertTemplate-WebServer.xml</ConfigFile>
+		</Infrastructure>
+		<!--
+			Desription:
+				The PageSetup Node describes the localization Options for the Report.
+				Adjust this to your local Paper Format.
+		-->
+		<PageSetup>
+			<!--
+				Desription:
+					The PaperFormat Node specifies the Paper Format to be used fot the Report.
+				Example:
+					- Letter
+					- LetterSmall
+					- Legal
+					- Executive
+					- A4
+					- A4Small
+				Default:
+					A4
+			-->
+			<PaperFormat>A4</PaperFormat>
+			<!--
+				Description:
+					Optional: Define a Custom Styles Template
+					Take the Template_Microsoft.dotx from the templates Folder, and modify it
+					Place it in the same folder as the config files
+				Default:
+					Leave Empty or remove the entire Node if not needed
+			-->
+			<!--
+			<CustomStylesTemplate>Template_Fabrikam.dotx</CustomStylesTemplate>
+			-->
+		</PageSetup>
+		<!--
+			Description:
+				Optional: Define a Custom Output Folder for the Report Files
+				You can also specify it via the ReportOutput Command Line Argument, however, 
+				the Setting here takes preference.
+				If none of these are given, we will use your Desktop Folder by Default
+				Default:
+					Leave Empty or remove the entire Node if not needed
+		-->
+		<!--
+		<ReportOutput>C:\Users\uwstoppe\Documents</ReportOutput>
+		-->
+		<!--
+			Description:
+				Optional: Specify a Customer Logo as an Image file
+				Specify just the file name, and place it in the same Folder as the Config Files
+			Default:
+				Leave Empty or remove the entire Node if not needed
+		-->
+		<CustomerLogo>fabrikam.png</CustomerLogo>
+	</Report>
+</Config>
