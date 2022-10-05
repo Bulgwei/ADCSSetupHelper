@@ -227,7 +227,7 @@ if($Global:SetupStatus -eq "InProgress"){
         }
     }
     # has CleanUp been requested? either from command line or from registry during pass 1
-    $CleanUp=($CleanUp -or (if((Get-ItemProperty -Path $RegistryRoot -Name OaadcsCleanUp -ErrorAction SilentlyContinue) -eq 1){$true}else{$false}))
+    $CleanUp=($CleanUp -or ($(if((Get-ItemProperty -Path $RegistryRoot -Name OaadcsCleanUp -ErrorAction SilentlyContinue) -eq 1){$true}else{$false})))
 
     # commit is automatically true in pass 2
     $commit=$True
@@ -410,6 +410,12 @@ If ($Commit) {
                     If ($_.URL -notmatch $DefaultLdapCdp) {
 
                         $LdapCDPContainer=if((($_.URL).split(","))[1] -eq "CN=CDP"){""}else{(((($_.URL).split(","))[1]).split("="))[1]}
+                        $LdapCDPContainer = $LdapCDPContainer.Replace("%2",$($env:computername))
+                        $LdapCDPContainer = $LdapCDPContainer.Replace("%3",$Config.Config.CA.Name)
+                        $LdapCDPContainer = $LdapCDPContainer.Replace("%4","")
+                        $LdapCDPContainer = $LdapCDPContainer.Replace("%8","")
+                        $LdapCDPContainer = $LdapCDPContainer.Replace("%9","")
+                        $LdapCDPContainer = $LdapCDPContainer.Replace("%10","")
 
                         Write-Line "Creating non-Standard LDAP CDP Object Container if necessary"
 
