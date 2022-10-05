@@ -21,7 +21,7 @@
 $CertEnrollFolder = "$($env:systemroot)\System32\CertSrv\CertEnroll"
 $DefaultLdapCdp = "ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10"
 $CaPolFile = "$env:SystemRoot\capolicy.inf"
-$CertFile = ".\certnew.cer"
+#$CertFile = ".\certnew.cer"
 $RegistryRoot = "HKLM:\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration"
 
 
@@ -211,7 +211,7 @@ Function Install-ADCSSvc
 Function Install-CaCert
 {
     Write-Header -Text "Installing the CA Certificate"
-
+    $CertFile = Select-NewCertFile
     # Ensuring that new CA Certificate File is in place
     If (Test-Path $CertFile) {
         If ($Config.Config.CA.Type -eq "EnterpriseSubordinateCA"){

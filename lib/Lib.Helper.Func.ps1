@@ -165,9 +165,21 @@ function Select-ConfigFile
     $ConfigFileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
         InitialDirectory = $BaseDirectory 
         Filter = 'ConfigFiles (*.xml)|*.xml'
+        Title = "select config file ..."
     }
     [void] $ConfigFileBrowser.ShowDialog()
     return ($ConfigFileBrowser.filename)
+}
+
+function Select-NewCertFile
+{
+    $NewCertFileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
+        InitialDirectory = $BaseDirectory 
+        Filter = 'Certificates (*.cer)|*.cer'
+        Title = "select new certificate file ..."
+    }
+    [void] $NewCertFileBrowser.ShowDialog()
+    return ($NewCertFileBrowser.filename)
 }
 
 
