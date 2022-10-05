@@ -71,10 +71,10 @@
 
    .Notes
     AUTHOR: Andreas Luy, MSFT; andreas.luy@microsoft.com
-    last change 09.01.2020
+    last change 09.01.2022
 
  General To-Dos:
- - bring everything into a message window instead of command window
+ - improve handling
 #>
 
 
