@@ -111,6 +111,9 @@ Function Build-Argumentlist
         }
 		
         # Dynamically filling the Arguments is called "Splatting"
+        if (($Config.Config.CA.Crypto.KeyAlgorithm).ToLower() -eq "ecc") {
+            $Config.Config.CA.Crypto.KeyAlgorithm = "ECDSA_P$($Config.Config.CA.Crypto.KeyLength)"
+        }
         $Arguments = @{
     
             CAType = $Config.Config.CA.Type
@@ -154,12 +157,18 @@ Function Build-Argumentlist
 
 Function Install-ADCSSvc
 {
+    $ret = $true
     # Installing the Windows Feature only if required
     If ((Get-WindowsFeature Adcs-Cert-Authority).Installed -eq $False) {
 
         Write-Header -Text "Installing the Certification Authority Role"
 
-        Add-WindowsFeature Adcs-Cert-Authority -IncludeManagementTools
+        try {
+            Add-WindowsFeature Adcs-Cert-Authority -IncludeManagementTools -ErrorAction Stop
+        } catch {
+            Write-Host "ADCS installation failed with error:`r`n$($_.Exception.Message)`r`n`r`nAborting ..."
+            $ret = $false
+        }
     }
 
     # Write the CaPolicy to the Windows Directory
@@ -169,7 +178,17 @@ Function Install-ADCSSvc
 
     Write-Header -Text "Configuring the Certification Authority Role"
 
-    Install-AdcsCertificationAuthority @InstallArgs
+    try {
+        #Install-AdcsCertificationAuthority @InstallArgs -WhatIf
+        Install-AdcsCertificationAuthority @InstallArgs -ErrorAction Stop
+    } catch {
+        Write-Host "ADCS installation failed with error:`r`n$($_.Exception.Message)`r`n`r`nAborting ..."
+        foreach ($arg in $InstallArgs) {
+            Write-Host $Arg
+        }
+        $ret = $false
+        #$msgBoxInput=[System.Windows.MessageBox]::Show("Stop now?","Waiting...","YesNo","Warning","No")
+    }
 
     If (($Config.Config.CA.Type -eq "EnterpriseSubordinateCA") -or ($Config.Config.CA.Type -eq "StandaloneSubordinateCA")) {
 
@@ -244,7 +263,7 @@ Function Install-CaCert
         # check the result and abort if ist was not successful!
 
 	    # Installing the CA Certificate
-        Run-MonitoredCommand -Command "certutil -installcert $CertFile"
+        Run-MonitoredCommand -Command "certutil -installcert ""$($CertFile)"""
 
         If ($LASTEXITCODE -ne 0) {
             Write-Line "An Error occurred while installing CA Certificate $($CertFile). Aborting Setup!" "Error"

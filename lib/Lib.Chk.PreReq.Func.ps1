@@ -94,7 +94,7 @@ function Get-EnrollSrvEffectivePermission
             $_.Permission
         }
     }
-    $EffectiveAllow = $Accesses | Where-Object {$_.AccessControlType -eq "Allow"} | ForEach-Object {
+    $EffectiveAllow = $Accesses | Where-Object {($_.AccessControlType -eq "Allow") -and (($_.Permission -contains "Full Control") -or ($_.Permission -contains "Write"))} | ForEach-Object {
         if ($IDs -contains $_.IdentityReference.ToString()) {
             $_.Permission
         }
