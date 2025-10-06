@@ -134,6 +134,7 @@
           <xsd:simpleType>
             <xsd:restriction base="xsd:string">
               <xsd:enumeration value="RSA"/>
+              <xsd:enumeration value="ECC"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:element>
@@ -145,6 +146,7 @@
               <xsd:enumeration value="2048"/>
               <xsd:enumeration value="1024"/>
               <xsd:enumeration value="512"/>
+              <xsd:enumeration value="521"/>
               <xsd:enumeration value="384"/>
               <xsd:enumeration value="256"/>
             </xsd:restriction>
